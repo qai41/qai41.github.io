@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>辅助保单填写工具 - 使用指南</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+            color: #fff;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .header .version {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+        .content {
+            padding: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #1d4ed8;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section h2::before {
+            content: "";
+            width: 4px;
+            height: 24px;
+            background: #3b82f6;
+            border-radius: 2px;
+        }
+        .subsection {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 12px;
+        }
+        .subsection h3 {
+            color: #374151;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .subsection h3 .icon {
+            width: 28px;
+            height: 28px;
+            background: #3b82f6;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 10px;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .step-number {
+            background: #3b82f6;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+        .step-content h4 {
+            color: #1f2937;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .step-content p {
+            color: #6b7280;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .step-content code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #dc2626;
+        }
+        .screenshot {
+            margin: 20px 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .screenshot img {
+            width: 100%;
+            display: block;
+        }
+        .screenshot-caption {
+            background: #f9fafb;
+            padding: 12px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        .feature-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .feature-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #16a34a;
+            font-weight: bold;
+            width: 22px;
+            height: 22px;
+            background: #dcfce7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 16px 30px;
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: none;
+            margin: 20px 0;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(22, 163, 74, 0.4);
+        }
+        .tip-box {
+            background: #eff6ff;
+            border: 1px solid #3b82f6;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .tip-box-title {
+            color: #1d4ed8;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tip-box-text {
+            color: #4b5563;
+            font-size: 0.95rem;
+        }
+        .warning-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 15px 0;
+        }
+        .warning-box-title {
+            color: #b45309;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .warning-box-text {
+            color: #92400e;
+            font-size: 0.95rem;
+        }
+        .mapping-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        .mapping-table th,
+        .mapping-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .mapping-table th {
+            background: #f3f4f6;
+            font-weight: 600;
+            color: #374151;
+        }
+        .mapping-table td code {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .btn-demo {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-right: 8px;
+        }
+        .btn-blue { background: #3b82f6; color: #fff; }
+        .btn-orange { background: #f59e0b; color: #fff; }
+        .footer {
+            background: #f9fafb;
+            padding: 20px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>辅助保单填写工具</h1>
+            <span class="version">v5.1</span>
+        </div>
+
+        <div class="content">
+            <!-- 第一部分：油猴脚本安装使用 -->
+            <div class="section">
+                <h2>第一部分：油猴脚本安装与使用</h2>
+
+                <div class="subsection">
+                    <h3><span class="icon">1</span>安装油猴扩展</h3>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>安装 Tampermonkey</h4>
+                            <p>在浏览器扩展商店搜索 <strong>Tampermonkey</strong>（油猴）并安装。支持 Chrome、Edge、Firefox 等主流浏览器。</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>确认扩展已启用</h4>
+                            <p>安装后浏览器工具栏会出现油猴图标，点击可查看已安装的脚本列表。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3><span class="icon">2</span>安装脚本</h3>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>下载脚本文件</h4>
+                            <p>点击下方按钮下载脚本文件 <code>yh-ok-20260427.js</code></p>
+                        </div>
+                    </div>
+                    <a href="yh-ok-20260427.js" download class="download-btn">⬇️ 下载脚本文件</a>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>导入到油猴</h4>
+                            <p>点击油猴图标 → 「管理面板」→ 「实用工具」→ 「导入」→ 选择下载的脚本文件，或直接将脚本文件拖拽到浏览器窗口。</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>保存脚本</h4>
+                            <p>脚本编辑页面打开后，点击「文件」→「保存」或按 <code>Ctrl+S</code> 保存。保存成功后脚本会自动运行。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3><span class="icon">3</span>验证安装</h3>
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>查看悬浮按钮</h4>
+                            <p>打开目标网页后，页面右侧会出现一个蓝色的「粘贴 JSON 填充」悬浮按钮，说明脚本安装成功。</p>
+                        </div>
+                    </div>
+                    <div class="tip-box">
+                        <div class="tip-box-title">💡 提示</div>
+                        <div class="tip-box-text">如果看不到悬浮按钮，请检查：1. 油猴扩展是否已启用 2. 当前网址是否匹配 3. 浏览器控制台是否有错误</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第二部分：功能使用方法 -->
+            <div class="section">
+                <h2>第二部分：脚本功能使用方法</h2>
+
+                <div class="subsection">
+                    <h3><span class="icon">1</span>配置字段映射规则</h3>
+                    <p>首次使用需要先配置 JSON 数据与表单字段的映射关系。</p>
+                    
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>打开配置面板</h4>
+                            <p>在目标网页上，<strong>右键点击</strong>蓝色的悬浮按钮，选择「⚙️ 打开配置」，即可看到规则编辑面板。</p>
+                        </div>
+                    </div>
+
+                    <div class="screenshot">
+                        <img src="../src-new/demo/guize-edit.png" alt="规则配置面板">
+                        <div class="screenshot-caption">规则配置面板界面</div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>填写规则信息</h4>
+                            <ul class="feature-list">
+                                <li><strong>规则名称</strong>：给这条规则起个名字，方便识别</li>
+                                <li><strong>自动匹配网址（可选）</strong>：填写网址关键词，脚本会自动匹配适用该规则的页面</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>配置字段映射</h4>
+                            <p>在「字段映射」区域，每一行代表一个映射关系：</p>
+                            <table class="mapping-table">
+                                <tr>
+                                    <th>列名</th>
+                                    <th>说明</th>
+                                    <th>示例</th>
+                                </tr>
+                                <tr>
+                                    <td>第一列</td>
+                                    <td>JSON 中的字段名（key）</td>
+                                    <td><code>json_key_1</code></td>
+                                </tr>
+                                <tr>
+                                    <td>第二列</td>
+                                    <td>表单中的目标字段名称</td>
+                                    <td><code>身份证正反面照片</code></td>
+                                </tr>
+                                <tr>
+                                    <td>第三列</td>
+                                    <td>字段类型（图片/文本/下拉框/文本域）</td>
+                                    <td><code>图片</code></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>添加/删除映射行</h4>
+                            <p>点击「+ 添加一行」增加新的映射，点击每行右侧的「×」删除该行。点击「清空」可删除所有映射。</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>保存规则</h4>
+                            <p>配置完成后，点击右下角的 <span class="btn-demo btn-blue">保存规则</span> 按钮保存。也可以先点击 <span class="btn-demo btn-orange">预览匹配</span> 查看配置是否正确。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3><span class="icon">2</span>使用自动填充功能</h3>
+                    
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>准备 JSON 数据</h4>
+                            <p>将要填充的数据整理成 JSON 格式，复制到剪贴板。例如：</p>
+                            <pre style="background:#f3f4f6;padding:12px;border-radius:8px;margin-top:10px;overflow-x:auto;"><code>{
+  "json_key_1": "https://example.com/idcard.jpg",
+  "json_key_2": "https://example.com/avatar.jpg",
+  "json_key_3": "https://example.com/form.jpg"
+}</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>打开目标弹窗</h4>
+                            <p>在网页上点击按钮打开需要填充的影像采集弹窗（通常是包含图片上传区域的对话框）。</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>执行填充</h4>
+                            <p>点击右侧的「粘贴 JSON 填充」按钮，脚本会自动：</p>
+                            <ul class="feature-list">
+                                <li>读取剪贴板中的 JSON 数据</li>
+                                <li>根据配置的映射关系找到对应表单字段</li>
+                                <li>自动将图片 URL 转换为 Base64 并填充</li>
+                                <li>显示填充成功的提示</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <div class="tip-box-title">💡 手动粘贴模式</div>
+                        <div class="tip-box-text">如果浏览器限制剪贴板读取，脚本会自动弹出输入框，让你手动粘贴 JSON 数据。</div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3><span class="icon">3</span>管理多个规则</h3>
+                    
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>打开规则管理</h4>
+                            <p>右键点击悬浮按钮，选择「📋 规则管理」，可以查看所有已保存的规则。</p>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>规则操作</h4>
+                            <ul class="feature-list">
+                                <li><strong>编辑</strong>：修改已有规则的配置</li>
+                                <li><strong>删除</strong>：删除不需要的规则</li>
+                                <li><strong>切换</strong>：点击规则名称切换当前使用的规则</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>导入/导出规则</h4>
+                            <p>右键菜单中选择「💾 导出规则」可将所有规则保存为 JSON 文件；选择「📥 导入规则」可从文件恢复规则配置。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3><span class="icon">4</span>支持的字段类型</h3>
+                    
+                    <table class="mapping-table">
+                        <tr>
+                            <th>类型</th>
+                            <th>说明</th>
+                            <th>数据格式</th>
+                        </tr>
+                        <tr>
+                            <td>图片</td>
+                            <td>自动上传图片到表单</td>
+                            <td>图片 URL 或 Base64 字符串</td>
+                        </tr>
+                        <tr>
+                            <td>文本</td>
+                            <td>填充普通文本输入框</td>
+                            <td>任意文本字符串</td>
+                        </tr>
+                        <tr>
+                            <td>下拉框</td>
+                            <td>选择下拉选项</td>
+                            <td>选项的值或显示文本</td>
+                        </tr>
+                        <tr>
+                            <td>文本域</td>
+                            <td>填充多行文本框</td>
+                            <td>任意文本字符串</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 常见问题 -->
+            <div class="section">
+                <h2>常见问题</h2>
+
+                <div class="subsection">
+                    <h3>❓ 悬浮按钮不显示？</h3>
+                    <p>1. 检查油猴扩展是否已启用<br>
+                    2. 确认当前网页地址与脚本匹配<br>
+                    3. 按 F12 打开控制台查看是否有错误信息</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>❓ 图片上传失败？</h3>
+                    <p>1. 确认图片 URL 可正常访问<br>
+                    2. 检查图片是否支持跨域访问<br>
+                    3. 尝试将图片转换为 Base64 格式后再填充</p>
+                </div>
+
+                <div class="subsection">
+                    <h3>❓ 如何找到正确的目标字段名称？</h3>
+                    <p>在表单页面右键点击悬浮按钮 → 「预览匹配」，脚本会高亮显示所有可识别的字段，根据提示填写正确的目标名称。</p>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-box-title">⚠️ 注意事项</div>
+                    <div class="warning-box-text">
+                        1. 首次使用前务必先配置映射规则<br>
+                        2. 建议在测试环境先熟悉功能再正式使用<br>
+                        3. 填充前请确认 JSON 数据格式正确
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            辅助保单填写工具 v5.1 · 使用指南
+        </div>
+    </div>
+</body>
+</html>
