@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         辅助保单填写工具 (v5.1)
+// @name         辅助表单填写工具 (v5.1)
 // @namespace    http://tampermonkey.net/
 // @version      5.1
 // @description  支持字段映射配置面板，右键悬浮按钮打开配置；支持规则修改/删除/管理；保留强约束样式和剪贴板填充
